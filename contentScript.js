@@ -89,24 +89,39 @@ function handleDynamicContent() {
 
 handleDynamicContent(); // Listen for dynamic content like popups
 
-// const twitchCRMPrefix = 'twitch-crm-';
-// const allUsersWithValues = Object.keys(localStorage).reduce((acc, key) => {
-//   if (key.startsWith(twitchCRMPrefix)) {
-//     acc[key] = localStorage.getItem(key);
-//   }
-//   return acc;
-// }, {});
+function saveBackup() {
+  const twitchCRMPrefix = 'twitch-crm-';
+  const allUsersWithValues = Object.keys(localStorage).reduce((acc, key) => {
+    if (key.startsWith(twitchCRMPrefix)) {
+      acc[key] = localStorage.getItem(key);
+    }
+    return acc;
+  }, {});
 
-// // Convert the result to JSON
-// const json = JSON.stringify(allUsersWithValues);
+  // Convert the result to JSON
+  const json = JSON.stringify(allUsersWithValues);
 
-// // Create a Blob with the JSON content
-// const blob = new Blob([json], {type: 'application/json'});
+  // Create a Blob with the JSON content
+  const blob = new Blob([json], {type: 'application/json'});
 
-// // Create a link and trigger the download
-// const a = document.createElement('a');
-// a.href = URL.createObjectURL(blob);
-// a.download = 'twitchCRMBackup.json'; // Name of the file to be downloaded
-// document.body.appendChild(a); // Append the link to the body (required for Firefox)
-// a.click();
-// document.body.removeChild(a); // Clean up
+  // Create a link and trigger the download
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'twitchCRMBackup.json'; // Name of the file to be downloaded
+  document.body.appendChild(a); // Append the link to the body (required for Firefox)
+  a.click();
+  document.body.removeChild(a); // Clean up
+}
+
+document.addEventListener('keydown', function(event) {
+  // For macOS: event.metaKey, for Windows/Linux: event.ctrlKey
+  const isCmdOrCtrl = event.metaKey || event.ctrlKey;
+  const isOption = event.altKey;
+  const isSKey = event.key === 's' || event.key === 'S' || event.key === 'ß';
+
+  if (isCmdOrCtrl && isOption && isSKey) {
+    event.preventDefault(); // Prevent any default behavior
+    // Place the command you want to run here
+    saveBackup();
+  }
+});
